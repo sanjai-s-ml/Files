@@ -1,32 +1,33 @@
 use strict;
 use warnings;
-use Time::Piece;
-use Time::Seconds;
-my $today = localtime; # Our current date: Sun Aug 03 11:08:02 2025
-my $anniversary = Time::Piece->strptime('2025-10-15', '%Y-%m-%d'); # Wed Oct 15, 2025
-
-print "Today: ", $today->ymd, "\n";
-print "Anniversary: ", $anniversary->ymd, "\n";
-
-# -----------------
-# Direct Comparison
-# -----------------
-if ($anniversary > $today) {
-    print "\n1. The anniversary is in the future.\n";
-} else {
-    print "\n1. The anniversary has already passed.\n";
+use 5.010; # Enables say() function
+# --- Car.pm (Our Class Definition) ---
+# This is our class (the blueprint)
+package Car;
+# The new() subroutine is our constructor
+sub new {
+   # The first argument to a class method is the class name, 'Car'
+   my $class = shift;
+   # An anonymous hash reference is created. This will hold our data (attributes).
+   my $self = {};
+   # We can set default attributes here
+   $self->{color} = "blue";
+   $self->{doors} = 4;
+   $self->{speed} = 0;
+   # This is the magic! We bless the hash reference, turning it into an object
+   bless $self, $class;
+   # We return the new object
+   return $self;
 }
-
-# -----------------
-# Finding the Difference
-# -----------------
-# Subtracting returns a Time::Seconds object
-my $time_difference = $anniversary - $today;
-
-# We can then get the difference in specific units
-my $days_to_go = $time_difference-> delta_days;
-my $months_to_go = $time_difference-> delta_months;
-
-print "\n2. Time difference in seconds: $time_difference\n";
-print "   Days until anniversary: $days_to_go\n";
-print "   Months until anniversary: $months_to_go\n";
+# --- Main Program ---
+package main;
+# This is where we create a new object from our Car class
+say "Creating a new car object...";
+my $my_car = Car->new();
+# Now we can interact with our object's attributes
+say "My car's color is: " . $my_car->{color};
+say "My car has " . $my_car->{doors} . " doors.";
+# We can also modify the object's attributes
+say "Changing my car's color to red...";
+$my_car->{color} = "red";
+say "My car's new color is: " . $my_car->{color};
